@@ -1,1 +1,0 @@
-/Users/vpr05/sky/lab/vertx/src/main/kotlin/com/example/starter/MainVerticle.kt

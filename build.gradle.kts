@@ -9,6 +9,7 @@ plugins {
   application
   id("com.github.johnrengelman.shadow") version "7.1.2"
   id("com.google.protobuf") version "0.9.2"
+
 }
 
 group = "com.example"
@@ -20,6 +21,8 @@ repositories {
 
 val vertxVersion = "4.4.1"
 val junitJupiterVersion = "5.9.1"
+val grpcVersion = "1.47.0"
+val grpcKotlinVersion = "1.3.0"
 
 val mainVerticleName = "com.example.starter.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
