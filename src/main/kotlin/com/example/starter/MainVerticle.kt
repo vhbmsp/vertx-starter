@@ -2,7 +2,7 @@ package com.example.starter
 
 import com.example.starter.ola.OlaReply
 import com.example.starter.ola.OlaRequest
-import com.example.starter.ola.OlaGrpc
+import com.example.starter.ola.*
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
