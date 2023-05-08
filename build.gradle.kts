@@ -56,8 +56,6 @@ dependencies {
     implementation("io.grpc:grpc-protobuf:$grpcVersion")
     implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
 
-
-
     // implementation("org.jetbrains.kotlin:kotlin-reflect")
     // implementation("io.grpc:grpc-protobuf:1.33.1")
     // implementation("io.grpc:grpc-stub:1.33.1")
@@ -79,7 +77,6 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     testImplementation("io.vertx:vertx-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
-
 
 }
 protobuf {
@@ -134,9 +131,3 @@ tasks.withType<JavaExec> {
   args = listOf("run", mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
 }
 
-
-// tasks.withType<Copy> {
-//    filesMatching("**/*.proto") {
-//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//    }
-// }

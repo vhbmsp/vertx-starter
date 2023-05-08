@@ -27,8 +27,8 @@ class MainVerticle : AbstractVerticle() {
           .bind(rpcServer)
 
       // start the server
-    vertx.createHttpServer().requestHandler(rpcServer).listen(8080)
-      .onFailure { cause: Throwable -> cause.printStackTrace() }
+      vertx.createHttpServer().requestHandler(rpcServer).listen(8080)
+        .onFailure { cause: Throwable -> cause.printStackTrace() }
         .onSuccess { println("-- Server is running on port 8080 ---") }
   }
 }
