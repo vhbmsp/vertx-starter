@@ -21,6 +21,23 @@ To run your application:
 ./gradlew clean run
 ```
 
+== Redis
+
+To start a Redis Stack container using the redis-stack image, run the following command in your terminal:
+```
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+```
+
+The docker run command above also exposes RedisInsight on port 8001. You can use RedisInsight by pointing your browser to localhost:8001.
+
+Connect with redis-cli
+You can then connect to the server using redis-cli, just as you connect to any Redis instance.
+
+If you don’t have redis-cli installed locally, you can run it from the Docker container:
+```
+docker exec -it redis-stack redis-cli
+```
+
 == Help
 
 * https://vertx.io/docs/[Vert.x Documentation]
@@ -28,5 +45,7 @@ To run your application:
 * https://groups.google.com/forum/?fromgroups#!forum/vertx[Vert.x User Group]
 * https://discord.gg/6ry7aqPWXy[Vert.x Discord]
 * https://gitter.im/eclipse-vertx/vertx-users[Vert.x Gitter]
+* https://redis.io/docs/stack/get-started/install/docker/[Redis]
+* https://vertx.io/docs/vertx-redis-client/java/#_using_vert_x_redis[Vert.x Redis]
 
 

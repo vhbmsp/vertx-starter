@@ -48,6 +48,7 @@ dependencies {
     implementation("io.vertx:vertx-grpc:$vertxVersion")
     implementation("io.vertx:vertx-grpc-protoc-plugin:$vertxVersion")
     implementation("io.vertx:vertx-grpc-server:$vertxVersion")
+    implementation("io.vertx:vertx-redis-client:$vertxVersion")
 
     implementation("io.vertx:vertx-lang-kotlin")
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
