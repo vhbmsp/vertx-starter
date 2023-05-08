@@ -12,7 +12,7 @@ buildscript {
 
 
 plugins {
-    kotlin ("jvm") version "1.8.21"
+    kotlin ("jvm") version "1.8.10"
     id("com.google.protobuf") version "0.9.3"
     application
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -23,16 +23,13 @@ version = "1.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    gradlePluginPortal()
-    mavenLocal()
-    google()
 }
 
 val vertxVersion = "4.4.1"
 val junitJupiterVersion = "5.9.1"
-val grpcVersion = "1.47.0"
+val grpcVersion = "1.54.1"
 val grpcKotlinVersion = "1.3.0"
-val protobufVersion = "0.9.3"
+val googleProtobufVersion = "3.10.1"
 
 val mainVerticleName = "com.example.starter.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
@@ -54,11 +51,11 @@ dependencies {
 
     implementation("io.vertx:vertx-lang-kotlin")
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
-    //  implementation("com.google.protobuf:protobuf-kotlin:3.21.12")
 
-    // implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
-    // implementation("io.grpc:grpc-protobuf:$grpcKotlinVersion")
-    // implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
+
+    implementation("io.grpc:grpc-protobuf:$grpcVersion")
+    implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
+
 
 
     // implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -68,11 +65,11 @@ dependencies {
     // compileOnly("javax.annotation:javax.annotation-api:1.3.2")
 
     // api("com.google.protobuf:protobuf-java-util:3.13.0")
-    implementation("io.grpc:grpc-all:1.33.1")
-    api("io.grpc:grpc-kotlin-stub:0.2.1")
+    // implementation("io.grpc:grpc-all:1.33.1")
+    // --> api("io.grpc:grpc-kotlin-stub:0.2.1")
 
-    implementation("io.grpc:protoc-gen-grpc-java:1.54.1")
-    implementation("io.grpc:protoc-gen-grpc-kotlin:0.1.5")
+    // implementation("io.grpc:protoc-gen-grpc-java:1.54.1")
+    // implementation("io.grpc:protoc-gen-grpc-kotlin:0.1.5")
 
 
     // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
@@ -87,12 +84,12 @@ dependencies {
 }
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.10.1"
+        artifact = "com.google.protobuf:protoc:$googleProtobufVersion"
     }
 
     plugins {
         id("grpc"){
-            artifact = "io.grpc:protoc-gen-grpc-java:1.54.1"
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
         }
         id("grpckt") {
             artifact = "io.grpc:protoc-gen-grpc-kotlin:0.1.5"
@@ -113,6 +110,11 @@ protobuf {
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions.jvmTarget = "17"
 
+tasks.withType<JavaCompile> {
+    targetCompatibility = "17"
+}
+
+
 tasks.withType<ShadowJar> {
   archiveClassifier.set("fat")
   manifest {
@@ -132,8 +134,9 @@ tasks.withType<JavaExec> {
   args = listOf("run", mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
 }
 
-tasks.withType<Copy> {
-    filesMatching("**/*.proto") {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    }
-}
+
+// tasks.withType<Copy> {
+//    filesMatching("**/*.proto") {
+//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    }
+// }

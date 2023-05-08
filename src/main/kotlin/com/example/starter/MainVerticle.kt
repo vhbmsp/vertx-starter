@@ -2,7 +2,8 @@ package com.example.starter
 
 import com.example.starter.ola.OlaReply
 import com.example.starter.ola.OlaRequest
-import com.example.starter.ola.OlaGrpc
+import com.example.starter.ola.OlaProto
+import com.example.starter.ola.OlaGrpcKt
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
@@ -22,22 +23,24 @@ class MainVerticle : AbstractVerticle() {
     // start the server
     vertx.createHttpServer().requestHandler(rpcServer).listen(8080)
       .onFailure { cause: Throwable -> cause.printStackTrace() }
+        .onSuccess { println("-- Server is running on port 8080 ---") }
   }
-/*
-    internal class OlaService: OlaServiceGrpckt.OlaServiceCoroutineImplBase() {
-        override  suspend fun SayOla(request: OlaRequest) = olaReply {
-            message = "hello ${request.name}"
-        }
-    }
-*/
 
-    fun createServer(vertx: Vertx, options: HttpServerOptions?) {
-        val grpcServer = GrpcServer.server(vertx)
-        val server: HttpServer = vertx.createHttpServer(options)
-        server
-            .requestHandler(grpcServer)
-            .listen()
+    internal class OlaService: OlaGrpcKt.OlaCoroutineImplBase() {
+
+          suspend fun SayOla(request: OlaRequest): OlaReply.Builder? {
+
+              println("Sending Reply to Request ${request.name}...")
+
+              var reply = OlaReply.newBuilder()
+                  reply.setMessage("hello ${request.name}")
+
+              return reply
+          }
+
+
     }
+
 
 /*
     fun requestResponse(server: GrpcServer) {
@@ -68,6 +71,5 @@ class MainVerticle : AbstractVerticle() {
  */
 
 fun main() {
-  val options = VertxOptions()
   Vertx.vertx().deployVerticle(MainVerticle())
 }
