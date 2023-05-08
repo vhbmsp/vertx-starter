@@ -2,7 +2,7 @@ package com.example.starter
 
 import com.example.starter.ola.OlaReply
 import com.example.starter.ola.OlaRequest
-import com.example.starter.ola.*
+import com.example.starter.ola.OlaGrpc
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
@@ -39,7 +39,7 @@ class MainVerticle : AbstractVerticle() {
             .listen()
     }
 
-
+/*
     fun requestResponse(server: GrpcServer) {
         server.callHandler(OlaGrpc.getSayHelloMethod()) { request: GrpcServerRequest<OlaRequest?, OlaReply?> ->
             request.handler { hello: OlaRequest? ->
@@ -50,7 +50,7 @@ class MainVerticle : AbstractVerticle() {
         }
     }
 
-
+*/
 }
 
 

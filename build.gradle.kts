@@ -1,13 +1,18 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.google.protobuf.gradle.GenerateProtoTask
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
-import org.jetbrains.kotlin.compiler.plugin.parsePluginOption
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.google.protobuf.gradle.*;
 
+
+buildscript {
+    dependencies {
+        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.13")
+    }
+}
 
 
 plugins {
-    kotlin ("jvm") version "1.7.21"
+    kotlin ("jvm") version "1.8.21"
     id("com.google.protobuf") version "0.9.3"
     application
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -18,13 +23,16 @@ version = "1.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
     mavenLocal()
+    google()
 }
 
 val vertxVersion = "4.4.1"
 val junitJupiterVersion = "5.9.1"
 val grpcVersion = "1.47.0"
 val grpcKotlinVersion = "1.3.0"
+val protobufVersion = "0.9.3"
 
 val mainVerticleName = "com.example.starter.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
@@ -46,8 +54,30 @@ dependencies {
 
     implementation("io.vertx:vertx-lang-kotlin")
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
-    implementation("com.google.protobuf:protobuf-kotlin:3.21.12")
+    //  implementation("com.google.protobuf:protobuf-kotlin:3.21.12")
 
+    // implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
+    // implementation("io.grpc:grpc-protobuf:$grpcKotlinVersion")
+    // implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
+
+
+    // implementation("org.jetbrains.kotlin:kotlin-reflect")
+    // implementation("io.grpc:grpc-protobuf:1.33.1")
+    // implementation("io.grpc:grpc-stub:1.33.1")
+    // implementation("io.grpc:grpc-netty:1.33.1")
+    // compileOnly("javax.annotation:javax.annotation-api:1.3.2")
+
+    // api("com.google.protobuf:protobuf-java-util:3.13.0")
+    implementation("io.grpc:grpc-all:1.33.1")
+    api("io.grpc:grpc-kotlin-stub:0.2.1")
+
+    implementation("io.grpc:protoc-gen-grpc-java:1.54.1")
+    implementation("io.grpc:protoc-gen-grpc-kotlin:0.1.5")
+
+
+    // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    // implementation("com.google.protobuf:protobuf-gradle-plugin:0.8.13")
+    // implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation(kotlin("stdlib-jdk8"))
     testImplementation("io.vertx:vertx-junit5")
@@ -57,34 +87,27 @@ dependencies {
 }
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.8.0"
+        artifact = "com.google.protobuf:protoc:3.10.1"
     }
 
+    plugins {
+        id("grpc"){
+            artifact = "io.grpc:protoc-gen-grpc-java:1.54.1"
+        }
+        id("grpckt") {
+            artifact = "io.grpc:protoc-gen-grpc-kotlin:0.1.5"
+        }
+    }
     generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                java { }
-                kotlin { }
-
-            }
-            task.plugins {
-                kotlin { }
+        all().forEach {
+            it.plugins {
+                id("grpc")
+                id("grpckt")
             }
         }
     }
 }
 
-
-sourceSets {
-    main {
-        proto {
-            srcDir("src/main/proto")
-        }
-        java {
-            srcDirs("generated-sources/main/java", "generated-sources/main/grpc")
-        }
-    }
-}
 
 
 val compileKotlin: KotlinCompile by tasks
@@ -107,4 +130,10 @@ tasks.withType<Test> {
 
 tasks.withType<JavaExec> {
   args = listOf("run", mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
+}
+
+tasks.withType<Copy> {
+    filesMatching("**/*.proto") {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
 }
