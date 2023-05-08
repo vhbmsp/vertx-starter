@@ -7,10 +7,16 @@ import io.vertx.core.AbstractVerticle
 import io.vertx.core.Vertx
 import io.vertx.grpc.server.GrpcServer
 import io.vertx.grpc.server.GrpcServiceBridge
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.redis.client.Redis
 import io.vertx.redis.client.RedisAPI
 import io.vertx.redis.client.RedisConnection
+import io.vertx.core.AsyncResult
+import io.vertx.core.Future
+import io.vertx.kotlin.coroutines.await
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class MainVerticle : AbstractVerticle() {
@@ -26,20 +32,27 @@ class MainVerticle : AbstractVerticle() {
       )
           .connect()
           .onSuccess {
-              print(" === Redis connected @localhost:6379 === ")
+              println(" === Redis connected @localhost:6379 === ")
               redisConnection = it
               println(redisConnection.toString())
           }
 
       val service: OlaGrpcKt.OlaCoroutineImplBase = object : OlaGrpcKt.OlaCoroutineImplBase() {
+
+
           override suspend fun sayOla(request: OlaRequest): OlaReply {
               val name = request.getName()
-              var message: String? =  ""
-              // println("sayOla com nome: $name")
-
               val redis: RedisAPI = RedisAPI.api(redisConnection)
 
-              var response = redis.get("myhash").onComplete { value -> message = value.result().toString()}
+              var message: String? = ""
+              // println("sayOla com nome: $name")
+
+              redis.get("myhash").onComplete {
+                  message = it.result().toString()
+                  // println("Redis query: $message")
+              }.await()
+
+              //println("$message $name")
 
               return OlaReply.newBuilder().setMessage("$message $name").build()
           }
