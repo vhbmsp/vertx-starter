@@ -58,7 +58,8 @@ dependencies {
     implementation("io.grpc:grpc-protobuf:$grpcVersion")
     implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    // implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
 
 
     // implementation("org.jetbrains.kotlin:kotlin-reflect")

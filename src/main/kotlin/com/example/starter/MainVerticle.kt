@@ -3,20 +3,16 @@ package com.example.starter
 import com.example.starter.ola.OlaGrpcKt
 import com.example.starter.ola.OlaReply
 import com.example.starter.ola.OlaRequest
-
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.Serializable
-
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Vertx
-// import io.vertx.core.json.Json
 import io.vertx.grpc.server.GrpcServer
 import io.vertx.grpc.server.GrpcServiceBridge
+import io.vertx.kotlin.coroutines.await
 import io.vertx.redis.client.Redis
 import io.vertx.redis.client.RedisAPI
 import io.vertx.redis.client.RedisConnection
-import io.vertx.kotlin.coroutines.await
 
 
 class MainVerticle : AbstractVerticle() {
@@ -50,7 +46,7 @@ class MainVerticle : AbstractVerticle() {
 
               val messageItem = Message.fromJson(response.toString())
 
-              println(messageItem)
+              // println(messageItem)
 
               return OlaReply.newBuilder().setMessage("${messageItem.message} $name").build()
           }
@@ -75,19 +71,19 @@ fun main() {
   Vertx.vertx().deployVerticle(MainVerticle())
 }
 
-@Serializable
+// @Serializable
 data class Message(
     val message: String = "",
-    val title : String = ""
+
+    @JsonIgnore
+    val title: String = ""
 ) {
 
     companion object {
         fun fromJson(jsonString: String): Message {
-
-            // val jsonObject  = Json.decodeValue(jsonString) to Message
-            // return Message(jsonObject.get("message"))
-
-            return Json.decodeFromString<Message>(jsonString)
+            // jackson
+            val mapper = ObjectMapper()
+            return mapper.readValue(jsonString, Message::class.java)
         }
     }
 }
