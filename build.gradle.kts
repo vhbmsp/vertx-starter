@@ -16,6 +16,7 @@ plugins {
     id("com.google.protobuf") version "0.9.3"
     application
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("plugin.serialization") version "1.8.21"
 }
 
 group = "com.example"
@@ -56,6 +57,9 @@ dependencies {
 
     implementation("io.grpc:grpc-protobuf:$grpcVersion")
     implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+
 
     // implementation("org.jetbrains.kotlin:kotlin-reflect")
     // implementation("io.grpc:grpc-protobuf:1.33.1")
