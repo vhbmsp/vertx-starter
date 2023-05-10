@@ -46,6 +46,7 @@ dependencies {
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-core")
     implementation("io.vertx:vertx-config")
+    implementation("io.vertx:vertx-web:$vertxVersion")
     implementation("io.vertx:vertx-grpc:$vertxVersion")
     implementation("io.vertx:vertx-grpc-protoc-plugin:$vertxVersion")
     implementation("io.vertx:vertx-grpc-server:$vertxVersion")
