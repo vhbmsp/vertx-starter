@@ -4,6 +4,7 @@ import com.example.starter.ola.OlaGrpcKt
 import com.example.starter.ola.OlaReply
 import com.example.starter.ola.OlaRequest
 import io.vertx.core.AbstractVerticle
+import io.vertx.core.http.HttpHeaders
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.kotlin.coroutines.await
@@ -55,6 +56,7 @@ class RestVerticle : AbstractVerticle() {
                 // println("Redis result: ${it.result()}")
                 messageItem = Message.fromJson(it.result().toString())
                 messageItem.message+= name
+                rc.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
                 rc.response().end(Message.toJson(messageItem))
             }
 
